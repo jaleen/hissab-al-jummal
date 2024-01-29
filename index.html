@@ -101,7 +101,7 @@
     <script>
         function getQuranVerse() {
             var quranVerseInput = document.getElementById('quranVerseInput').value;
-            var apiUrl = 'http://api.alquran.cloud/v1/ayah/' + quranVerseInput;
+            var apiUrl = 'https://api.alquran.cloud/v1/ayah/' + quranVerseInput;
 
             fetch(apiUrl)
                 .then(response => response.json())
