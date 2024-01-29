@@ -81,15 +81,12 @@
     <p>
         If you encounter any issues or have any questions, feel free to contact me at jalal.din @ gmail dot com
     </p>
-    <p>
-        This is just personal experimental usage and shouldn't be used commercial/industrial or financial benefits. Credits to https://alquran.cloud/ for public Quran API. May Allah reward them abundantly.  
-    </p>
 
     <!-- New Form for Quran Verse -->
     <form id="quranVerseForm">
         <label for="quranVerseInput">Enter Quran Verse (Format: surah:verse):</label><br>
         <input type="text" id="quranVerseInput" name="quranVerseInput" placeholder="E.g., 2:10"><br>
-        <input type="button" value="Get Quran Verse" onclick="getQuranVerse()">
+        <input type="button" id="getQuranVerseButton" value="Get Quran Verse" onclick="getQuranVerse()">
     </form>
 
     <form id="myForm">
@@ -102,12 +99,32 @@
     <div id="hisabAlJummalValues"></div>
 
     <script>
-        document.getElementById('quranVerseInput').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent the default behavior of refreshing the page
-            getQuranVerse(); // Call the getQuranVerse() method
+        function validateQuranVerseInput(input) {
+            // Regular expression for matching two digits separated by a colon
+            var regex = /^\d{1,2}:\d{1,2}$/;
+            return regex.test(input);
         }
+
+        document.getElementById('quranVerseInput').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent the default behavior of refreshing the page
+                if (validateQuranVerseInput(this.value)) {
+                    getQuranVerse(); // Call the getQuranVerse() method
+                } else {
+                    alert('Please enter a valid Quran verse (Format: surah:verse)');
+                }
+            }
         });
+
+        document.getElementById('getQuranVerseButton').addEventListener('click', function () {
+            var quranVerseInput = document.getElementById('quranVerseInput').value;
+            if (validateQuranVerseInput(quranVerseInput)) {
+                getQuranVerse();
+            } else {
+                alert('Please enter a valid Quran verse (Format: surah:verse)');
+            }
+        });
+
         function getQuranVerse() {
             var quranVerseInput = document.getElementById('quranVerseInput').value;
             var apiUrl = 'https://api.alquran.cloud/v1/ayah/' + quranVerseInput;
@@ -150,8 +167,8 @@
             for (var i = 0; i < text.length; i++) {
                 var character = text.charAt(i);
                 var numericalValue = getHisabAlJummalValue(character);
-                if (numericalValue != 0 && character != 0) {
-                    hisabAlJummalValues += character + ':'+numericalValue+ ', ';
+                if (numericalValue != 0 ) {
+                    hisabAlJummalValues += character + ':' + numericalValue + ', ';
                 }
                 totalHisabAlJummal += numericalValue;
 
@@ -167,7 +184,7 @@
                 'ي': 10, 'ك': 20, 'ل': 30, 'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80,
                 'ص': 90, 'ق': 100, 'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
                 'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000, 'ً': 0, 'ٍ': 0, 'ّ': 0, 'َ': 0,
-                'ُ': 0, 'ِ': 0, 'ٰ': 0, 'ْ': 0, 'ٔ': 0, 'ٱ': 1, 'إ': 1, 'أ': 1, 'ی': 10, 'ى': 10, 'ؤ': 6, 'ة': 5,'ُ':0, 'ئ':10
+                'ُ': 0, 'ِ': 0, 'ٰ': 0, 'ْ': 0, 'ٔ': 0, 'ٱ': 1, 'إ': 1, 'أ': 1, 'ی': 10, 'ى': 10, 'ؤ': 6, 'ة': 5, 'ُ': 0, 'ئ': 10
             };
 
             // Return the value of the character if it exists in the mapping, otherwise return 0
