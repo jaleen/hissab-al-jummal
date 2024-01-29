@@ -1,66 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hisab Al Jummal Calculator</title>
-    <meta name="description" content="Calculate Hisab Al Jummal values for Arabic text. Hisab Al Jummal assigns numerical values to Arabic letters.">
-    <link rel="canonical" href="https://example.com/hisab-al-jummal-calculator">
-
-    <!-- Include any CSS files here -->
-
     <style>
-        /* Include your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            resize: none;
+            margin-bottom: 10px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        input[type="button"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover,
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #totalValue {
+            font-size: 1.5em;
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        #hisabAlJummalValues {
+            margin-top: 20px;
+        }
     </style>
 </head>
+
 <body>
-    <header>
-        <h1>Hisab Al Jummal Calculator</h1>
-        <p>Welcome to the Hisab Al Jummal Calculator! Calculate Hisab Al Jummal values for Arabic text.</p>
-    </header>
+    <h1>Hisab Al Jummal Calculator</h1>
+    <p>
+        Welcome to the Hisab Al Jummal Calculator! Hisab Al Jummal is a method of assigning numerical values to Arabic
+        letters.
+        You can enter Arabic text in the textarea below and click submit to calculate the Hisab Al Jummal values of each
+        character.
+    </p>
+    <p>
+        If you encounter any issues or have any questions, feel free to contact me at jalal.din @ gmail dot com
+    </p>
 
-    <main>
-        <p>
-            Hisab Al Jummal is a method of assigning numerical values to Arabic letters. Enter Arabic text in the textarea below and click submit to calculate the Hisab Al Jummal values of each character.
-        </p>
-        <p>
-            If you encounter any issues or have any questions, feel free to contact me at <a href="mailto:your_email@example.com">your_email@example.com</a>.
-        </p>
+    <!-- New Form for Quran Verse -->
+    <form id="quranVerseForm">
+        <label for="quranVerseInput">Enter Quran Verse (Format: surah:verse):</label><br>
+        <input type="text" id="quranVerseInput" name="quranVerseInput" placeholder="E.g., 2:10"><br>
+        <input type="button" value="Get Quran Verse" onclick="getQuranVerse()">
+    </form>
 
-        <form id="myForm">
-            <textarea name="inputText" id="inputText" placeholder="Enter Arabic text..."></textarea>
-            <input type="submit" value="Calculate Hisab Al Jummal">
-        </form>
-        <div id="totalValue"></div>
-        <div id="hisabAlJummalValues"></div>
+    <form id="myForm">
+        <textarea name="inputText" id="inputText" placeholder="Enter Arabic text..."></textarea>
+        <input type="submit" value="Calculate Hisab Al Jummal">
+    </form>
 
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Hisab Al Jummal Calculator. All rights reserved.</p>
-    </footer>
-
-    <!-- Include any JavaScript files here -->
+    <div id="totalValue"></div>
+    <h2>Hisab Al Jummal Values</h2>
+    <div id="hisabAlJummalValues"></div>
 
     <script>
-        document.getElementById('myForm').addEventListener('submit', function(event) {
+        function getQuranVerse() {
+            var quranVerseInput = document.getElementById('quranVerseInput').value;
+            var apiUrl = 'http://api.alquran.cloud/v1/ayah/' + quranVerseInput;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    var verseText = data.data.text;
+                    document.getElementById('inputText').value = verseText;
+                })
+                .catch(error => {
+                    console.error('Error fetching Quran verse:', error);
+                    alert('Error fetching Quran verse. Please try again later.');
+                });
+        }
+
+        document.getElementById('myForm').addEventListener('submit', function (event) {
             event.preventDefault();
-            
+
             var inputTextValue = document.getElementById('inputText').value;
             var hisabAlJummalDiv = document.getElementById('hisabAlJummalValues');
             var totalValueDiv = document.getElementById('totalValue');
             hisabAlJummalDiv.innerHTML = ''; // Clear previous content
             totalValueDiv.innerText = ''; // Clear previous total
-            
-            var {hisabAlJummalValuesText, totalHisabAlJummal} = convertToHisabAlJummal(inputTextValue);
-            
+
+            var { hisabAlJummalValuesText, totalHisabAlJummal } = convertToHisabAlJummal(inputTextValue);
+
             // Print Hisab Al Jummal values to console
             console.log(hisabAlJummalValuesText);
             console.log('Total Hisab Al Jummal: ' + totalHisabAlJummal);
-            
+
             // Display Hisab Al Jummal values and total on the HTML page
+            totalValueDiv.innerHTML = '<h2>Total Hisab Al Jummal</h2>' + totalHisabAlJummal;
             hisabAlJummalDiv.innerText = hisabAlJummalValuesText;
-            totalValueDiv.innerText = 'Total Hisab Al Jummal: ' + totalHisabAlJummal;
         });
 
         function convertToHisabAlJummal(text) {
@@ -69,11 +141,15 @@
             for (var i = 0; i < text.length; i++) {
                 var character = text.charAt(i);
                 var numericalValue = getHisabAlJummalValue(character);
-                hisabAlJummalValues += character + ': ' + numericalValue + '\n';
+                if (numericalValue != 0 && character != 0) {
+                    hisabAlJummalValues += character + ':'+numericalValue+ ', ';
+                }
                 totalHisabAlJummal += numericalValue;
+
             }
-            return {hisabAlJummalValuesText: hisabAlJummalValues, totalHisabAlJummal: totalHisabAlJummal};
+            return { hisabAlJummalValuesText: hisabAlJummalValues, totalHisabAlJummal: totalHisabAlJummal };
         }
+
 
         function getHisabAlJummalValue(character) {
             // Define Hisab Al Jummal values for Arabic characters
@@ -82,7 +158,7 @@
                 'ي': 10, 'ك': 20, 'ل': 30, 'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80,
                 'ص': 90, 'ق': 100, 'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
                 'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000, 'ً': 0, 'ٍ': 0, 'ّ': 0, 'َ': 0,
-                'ُ': 0, 'ِ': 0, 'ٰ': 0, 'ْ': 0, 'ٔ': 0
+                'ُ': 0, 'ِ': 0, 'ٰ': 0, 'ْ': 0, 'ٔ': 0, 'ٱ': 1, 'إ': 1, 'أ': 1, 'ی': 10, 'ى': 10, 'ؤ': 6, 'ة': 5,'ُ':0, 'ئ':10
             };
 
             // Return the value of the character if it exists in the mapping, otherwise return 0
@@ -90,4 +166,5 @@
         }
     </script>
 </body>
+
 </html>
