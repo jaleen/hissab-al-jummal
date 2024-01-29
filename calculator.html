@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hisab Al Jummal Calculator</title>
+    <meta name="description" content="Calculate Hisab Al Jummal values for Arabic text. Hisab Al Jummal assigns numerical values to Arabic letters.">
+    <link rel="canonical" href="https://example.com/hisab-al-jummal-calculator">
+
+    <!-- Include any CSS files here -->
+
+    <style>
+        /* Include your CSS styles here */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Hisab Al Jummal Calculator</h1>
+        <p>Welcome to the Hisab Al Jummal Calculator! Calculate Hisab Al Jummal values for Arabic text.</p>
+    </header>
+
+    <main>
+        <p>
+            Hisab Al Jummal is a method of assigning numerical values to Arabic letters. Enter Arabic text in the textarea below and click submit to calculate the Hisab Al Jummal values of each character.
+        </p>
+        <p>
+            If you encounter any issues or have any questions, feel free to contact me at <a href="mailto:your_email@example.com">your_email@example.com</a>.
+        </p>
+
+        <form id="myForm">
+            <textarea name="inputText" id="inputText" placeholder="Enter Arabic text..."></textarea>
+            <input type="submit" value="Calculate Hisab Al Jummal">
+        </form>
+        <div id="totalValue"></div>
+        <div id="hisabAlJummalValues"></div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Hisab Al Jummal Calculator. All rights reserved.</p>
+    </footer>
+
+    <!-- Include any JavaScript files here -->
+
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var inputTextValue = document.getElementById('inputText').value;
+            var hisabAlJummalDiv = document.getElementById('hisabAlJummalValues');
+            var totalValueDiv = document.getElementById('totalValue');
+            hisabAlJummalDiv.innerHTML = ''; // Clear previous content
+            totalValueDiv.innerText = ''; // Clear previous total
+            
+            var {hisabAlJummalValuesText, totalHisabAlJummal} = convertToHisabAlJummal(inputTextValue);
+            
+            // Print Hisab Al Jummal values to console
+            console.log(hisabAlJummalValuesText);
+            console.log('Total Hisab Al Jummal: ' + totalHisabAlJummal);
+            
+            // Display Hisab Al Jummal values and total on the HTML page
+            hisabAlJummalDiv.innerText = hisabAlJummalValuesText;
+            totalValueDiv.innerText = 'Total Hisab Al Jummal: ' + totalHisabAlJummal;
+        });
+
+        function convertToHisabAlJummal(text) {
+            var hisabAlJummalValues = '';
+            var totalHisabAlJummal = 0;
+            for (var i = 0; i < text.length; i++) {
+                var character = text.charAt(i);
+                var numericalValue = getHisabAlJummalValue(character);
+                hisabAlJummalValues += character + ': ' + numericalValue + '\n';
+                totalHisabAlJummal += numericalValue;
+            }
+            return {hisabAlJummalValuesText: hisabAlJummalValues, totalHisabAlJummal: totalHisabAlJummal};
+        }
+
+        function getHisabAlJummalValue(character) {
+            // Define Hisab Al Jummal values for Arabic characters
+            var hisabAlJummalValues = {
+                'ا': 1, 'ب': 2, 'ج': 3, 'د': 4, 'ه': 5, 'و': 6, 'ز': 7, 'ح': 8, 'ط': 9,
+                'ي': 10, 'ك': 20, 'ل': 30, 'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80,
+                'ص': 90, 'ق': 100, 'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
+                'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000, 'ً': 0, 'ٍ': 0, 'ّ': 0, 'َ': 0,
+                'ُ': 0, 'ِ': 0, 'ٰ': 0, 'ْ': 0, 'ٔ': 0
+            };
+
+            // Return the value of the character if it exists in the mapping, otherwise return 0
+            return hisabAlJummalValues[character] || 0;
+        }
+    </script>
+</body>
+</html>
