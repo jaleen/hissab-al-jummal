@@ -99,6 +99,12 @@
     <div id="hisabAlJummalValues"></div>
 
     <script>
+        document.getElementById('quranVerseInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent the default behavior of refreshing the page
+            getQuranVerse(); // Call the getQuranVerse() method
+        }
+        });
         function getQuranVerse() {
             var quranVerseInput = document.getElementById('quranVerseInput').value;
             var apiUrl = 'https://api.alquran.cloud/v1/ayah/' + quranVerseInput;
