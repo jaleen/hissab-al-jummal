@@ -10,7 +10,7 @@ Welcome to the Hisab Al Jummal Calculator! Hisab Al Jummal is a method of assign
 
 ## Contact
 
-If you encounter any issues or have any questions, feel free to contact me at your_email@example.com.
+If you encounter any issues or have any questions, feel free to contact me at jalal.din@gmail.com
 
 ## Credits
 
